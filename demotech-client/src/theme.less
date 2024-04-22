@@ -1,9 +1,29 @@
+@import "ng-zorro-antd/ng-zorro-antd.less";
+//// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+@primary-color: #4361ee;                         // primary color for all components
+@link-color: #1890ff;                            // link color
+@success-color: #4fe505;                         // success state color
+@warning-color: #faad14;                         // warning state color
+@error-color: #f5222d;                           // error state color
+@font-size-base: 14px;                           // major text font size
+@heading-color: rgba(0, 0, 0, .85);              // heading text color
+@text-color: rgba(0, 0, 0, .65);                 // major text color
+@text-color-secondary : rgba(0, 0, 0, .45);      // secondary text color
+@disabled-color : rgba(0, 0, 0, .25);            // disable state color
+@border-radius-base: 7px;                        // major border radius
+@border-radius-sm: 4px;                        // major border radius
+@border-color-base: #d9d9d9;                     // major border color
+@box-shadow-base: 0 2px 8px rgba(0, 0, 0, .15);  // major shadow for layers
+@breadcrumb-base-color: @link-color;
+@breadcrumb-last-item-color: @link-color;
+@breadcrumb-link-color: @link-color;
+@breadcrumb-link-color-hover: @link-color;
+@breadcrumb-separator-color: @link-color;
+@btn-font-weight: 600;
+@table-header-bg: #ebebeb;
+@table-header-color: @heading-color;
+@select-selection-item-bg: #e6e4e0;
 
-// Custom Theming for NG-ZORRO
-// For more information: https://ng.ant.design/docs/customize-theme/en
-@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
-
-// Override less variables to here
-// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
-
-// @primary-color: #1890ff;
+.ant-input-group > .ant-input:last-child:first-child{
+  border-radius: @border-radius-base;
+}
