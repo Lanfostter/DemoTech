@@ -2,38 +2,51 @@ package com.example.demotech.base.config;
 
 import com.example.demotech.base.domain.Role;
 import com.example.demotech.base.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Setter
+@Getter
 public class CustomUserDetails implements UserDetails {
-    private User user;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        if (user != null && !CollectionUtils.isEmpty(user.getRoles())) {
-            for (Role role : user.getRoles()) {
-                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.getCode());
-            }
-        }
-        return authorities;
+    private UUID id;
+
+    private String username;
+
+    private String email;
+
+    @JsonIgnore
+    private String password;
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public CustomUserDetails(UUID id, String username, String email, String password,
+                           Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
     }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
+    public static CustomUserDetails build(User user) {
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
 
-    @Override
-    public String getUsername() {
-        return user.getUsername();
+        return new CustomUserDetails(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
     }
 
     @Override
@@ -55,4 +68,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

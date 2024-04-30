@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, NonNullableFormBuilder, Validators} from "@angular/forms";
+import {LoginService} from "./login.service";
+import {Login} from "../../model/login";
 
 @Component({
   selector: 'app-login',
@@ -20,6 +22,10 @@ export class LoginComponent {
   submitForm(): void {
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
+      var login = new Login(this.validateForm.value.userName!, this.validateForm.value.password!)
+      this.service.login(login).subscribe(value => {
+        console.log(value)
+      })
     } else {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
@@ -30,6 +36,6 @@ export class LoginComponent {
     }
   }
 
-  constructor(private fb: NonNullableFormBuilder) {
+  constructor(private fb: NonNullableFormBuilder, private service: LoginService) {
   }
 }
