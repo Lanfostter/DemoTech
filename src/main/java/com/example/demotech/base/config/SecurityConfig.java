@@ -54,7 +54,7 @@ public class SecurityConfig {
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((registry) -> registry.requestMatchers("/public/**", "/api/**")
+        http.authorizeHttpRequests((registry) -> registry.requestMatchers("/public/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
