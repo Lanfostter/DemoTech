@@ -24,10 +24,13 @@ public class User extends BaseObject {
     private String password;
     @Column(name = "username")
     private String username;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}) // Đảm bảo duy nhất
+    )
     private Set<Role> roles = new HashSet<>();
 
 }

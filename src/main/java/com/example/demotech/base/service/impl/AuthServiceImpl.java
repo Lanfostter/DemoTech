@@ -1,6 +1,6 @@
 package com.example.demotech.base.service.impl;
 
-import com.example.demotech.base.config.CustomUserDetails;
+import com.example.demotech.base.dto.ApiResponse;
 import com.example.demotech.base.dto.LoginDto;
 import com.example.demotech.base.dto.UserInfoResponse;
 import com.example.demotech.base.service.AuthService;
@@ -16,12 +16,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
-
     private final JWTService jwtUtils;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager, JWTService jwtUtils) {
@@ -30,22 +28,33 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<?> login(LoginDto loginDto) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+    public ResponseEntity<ApiResponse<UserInfoResponse>> login(LoginDto loginDto) {
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        String jwtCookie = jwtUtils.generateToken(userDetails);
+            String jwtToken = jwtUtils.generateToken(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie)
-                .body(new UserInfoResponse(null, userDetails.getUsername(), null, roles));
+            UserInfoResponse userInfo = new UserInfoResponse(null, userDetails.getUsername(), null, roles,jwtToken);
 
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                    .body(ApiResponse.success("Login successful", userInfo));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(
+                    ApiResponse.error("Invalid username or password")
+            );
+        }
     }
+
+
 }
