@@ -17,6 +17,8 @@ import Box from "@mui/material/Box";
 import {useNavigate} from "react-router-dom";
 import {LoginRequest} from "../model/user.ts";
 import { useStore } from '../context/StoreContext.tsx';
+import {loginUser} from "../redux/auth/authSlice.ts";
+import {useAppDispatch} from "../hook/hook.ts";
 
 const Card = styled(MuiCard)(({theme}) => ({
     display: 'flex',
@@ -46,8 +48,7 @@ const validationSchema = Yup.object({
 });
 
 export default function SignIn(props: any) {
-    const dispatch = useDispatch();
-    const {loading, error } = useStore().getState().user
+    const dispatch = useAppDispatch();
     const navigate = useNavigate()
     const handleSubmit = (fromData: LoginRequest) => {
         dispatch(loginUser(fromData));
