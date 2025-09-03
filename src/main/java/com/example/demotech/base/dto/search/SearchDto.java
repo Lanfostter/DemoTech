@@ -14,4 +14,5 @@ public class SearchDto {
     private String keyword;
     private Date fromDate;
     private Date toDate;
+    private boolean voided = false;
 }

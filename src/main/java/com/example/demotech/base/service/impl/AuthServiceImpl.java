@@ -6,6 +6,7 @@ import com.example.demotech.base.dto.UserInfoResponse;
 import com.example.demotech.base.service.AuthService;
 import com.example.demotech.base.service.JWTService;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,15 +44,15 @@ public class AuthServiceImpl implements AuthService {
                     .map(GrantedAuthority::getAuthority)
                     .toList();
 
-            UserInfoResponse userInfo = new UserInfoResponse(null, userDetails.getUsername(), null, roles,jwtToken);
+            UserInfoResponse userInfo = new UserInfoResponse(null, userDetails.getUsername(), null, roles, jwtToken);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                     .body(ApiResponse.success("Login successful", userInfo));
 
         } catch (Exception e) {
-            return ResponseEntity.status(401).body(
-                    ApiResponse.error("Invalid username or password")
+            return ResponseEntity.status(HttpStatus.OK.value()).body(
+                    ApiResponse.custom("Invalid username or password", null, HttpStatus.FORBIDDEN)
             );
         }
     }
