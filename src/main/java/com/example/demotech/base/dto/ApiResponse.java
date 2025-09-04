@@ -3,12 +3,18 @@ package com.example.demotech.base.dto;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResponse<T> {
+public class ApiResponse<T> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String message;
     private T data;
     private Integer status;

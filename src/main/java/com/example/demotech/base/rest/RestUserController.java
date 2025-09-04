@@ -21,7 +21,7 @@ public class RestUserController {
     }
 
     @PostMapping("/paging")
-    public ApiResponse<Page<UserInfoResponse>> login(@RequestBody UserSearch search) {
+    public ApiResponse<Page<UserInfoResponse>> paging(@RequestBody UserSearch search) {
         return service.paging(search);
     }
 }

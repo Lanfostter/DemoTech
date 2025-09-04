@@ -5,6 +5,8 @@ import com.example.demotech.base.domain.Role;
 import com.example.demotech.base.domain.User;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,15 +16,15 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse extends BaseObject {
-    private UUID id;
+public class UserInfoResponse extends BaseObjectDto  {
     private String username;
     private String email;
     private List<String> roles;
     private String token;
 
     public UserInfoResponse(User user) {
-        this.id = user.getId();
+        super(user);
+        this.setName(user.getName());
         this.username = user.getUsername();
         this.email = user.getEmail();
         if (user.getRoles() != null) {

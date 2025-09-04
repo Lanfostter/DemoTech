@@ -49,6 +49,7 @@ public class BaseObject implements Serializable {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime modifiedDate;
-
+    @Column(name = "voided")
+    private Boolean voided = false;
 
 }

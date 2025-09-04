@@ -1,6 +1,5 @@
 import {createContext, useContext, useState, useEffect, type ReactNode} from "react";
 import {jwtDecode} from "jwt-decode";
-import {setupInterceptors} from "../api/axios.ts";
 
 interface AuthContextType {
     user: any;
@@ -13,9 +12,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
-    useEffect(() => {
-        setupInterceptors(logout); // 👉 truyền logout cho interceptor
-    }, []);
     const STORAGE_KEY = import.meta.env.VITE_TOKEN_KEY || "token";
 
     const [token, setToken] = useState<string | null>(

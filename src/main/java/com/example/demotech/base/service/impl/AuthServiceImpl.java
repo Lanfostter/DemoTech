@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
                     .map(GrantedAuthority::getAuthority)
                     .toList();
 
-            UserInfoResponse userInfo = new UserInfoResponse(null, userDetails.getUsername(), null, roles, jwtToken);
+            UserInfoResponse userInfo = new UserInfoResponse(userDetails.getUsername(), null, roles, jwtToken);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)

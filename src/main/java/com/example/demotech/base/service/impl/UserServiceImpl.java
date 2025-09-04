@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
 
         QueryHelper<UserInfoResponse> helper = new QueryHelper<>(
                 em,
-                "SELECT new com.example.demotech.base.dto.UserInfoResponse(u.id, u.username, u.email, u.status) FROM User u WHERE 1=1 ",
-                "SELECT COUNT(u) FROM User u WHERE 1=1 ",
+                "SELECT new com.example.demotech.base.dto.UserInfoResponse(u) FROM User u WHERE 1=1 ",
+                "SELECT COUNT(u.id) FROM User u WHERE 1=1 ",
                 "u"
         );
         buildSearch(search, helper);

@@ -1,12 +1,20 @@
 import type { RouteObject } from "react-router-dom";
-import dashboardRoute from "../pages/Dashboard/dashboard-route.tsx";
+import PrivateRoute from "../component/PrivateRoute";
 import Layout from "../component/Layout.tsx";
+import dashboardRoute from "../pages/Dashboard/dashboard-route.tsx";
+import userRoute from "../pages/User/user-route.tsx";
 
 const privateRoutes: RouteObject[] = [
     {
-        element: <Layout />, // Layout bọc các route con
+        element: <PrivateRoute />, // kiểm tra login
         children: [
-            ...dashboardRoute, // tất cả các route dashboard sẽ nằm trong Layout
+            {
+                element: <Layout />, // Layout dùng chung
+                children: [
+                    ...dashboardRoute, // tất cả route dashboard
+                    ...userRoute
+                ],
+            },
         ],
     },
 ];
