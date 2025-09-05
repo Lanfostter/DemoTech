@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -22,5 +24,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<UserInfoResponse>> login(@RequestBody LoginDto login) {
         return authService.login(login);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> body) {
+        String refreshToken = body.get("refreshToken");
+        return authService.refresh(refreshToken);
     }
 }

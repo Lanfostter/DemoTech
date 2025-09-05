@@ -4,7 +4,7 @@ import {jwtDecode} from "jwt-decode";
 interface AuthContextType {
     user: any;
     token: string | null;
-    login: (token: string) => void;
+    login: (token: string, refreshToken: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -12,7 +12,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
-    const STORAGE_KEY = import.meta.env.VITE_TOKEN_KEY || "token";
+    const STORAGE_KEY = import.meta.env.VITE_TOKEN_KEY || "accessToken";
+    const STORAGE_RF_KEY = import.meta.env.VITE_RF_TOKEN_KEY || "refreshToken";
 
     const [token, setToken] = useState<string | null>(
         localStorage.getItem(STORAGE_KEY)
@@ -34,13 +35,15 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         }
     }, [token]);
 
-    const login = (newToken: string) => {
-        localStorage.setItem(STORAGE_KEY, newToken);
-        setToken(newToken);
+    const login = (accessToken: string, refreshToken: string) => {
+        localStorage.setItem(STORAGE_KEY, accessToken);
+        localStorage.setItem(STORAGE_RF_KEY, refreshToken);
+        setToken(accessToken);
     };
 
     const logout = () => {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(STORAGE_RF_KEY);
         setToken(null);
         setUser(null);
     };

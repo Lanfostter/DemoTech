@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // 🔹 Bật CORS ở đây
                 .sessionManagement(session -> session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/api/auth/login", "/auth/register").permitAll()
+                        .requestMatchers("/public/**", "/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

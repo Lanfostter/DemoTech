@@ -1,4 +1,6 @@
 package com.example.demotech.base.config;
+
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -7,13 +9,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@Data
 public class JwtConfig {
 
-    @Value("${jwt.expiration}")
-    private String jwtExpirationStr;
+    @Value("${jwt.access-expiration}")
+    private String accessExpirationStr;
 
-    public long getJwtExpirationMs() {
-        return parseDuration(jwtExpirationStr);
+    @Value("${jwt.refresh-expiration}")
+    private String refreshExpirationStr;
+    @Value("${jwt.secret}")
+    private String secret;
+
+    public long getAccessExpirationMs() {
+        return parseDuration(accessExpirationStr);
+    }
+
+    public long getRefreshExpirationMs() {
+        return parseDuration(refreshExpirationStr);
     }
 
     private long parseDuration(String durationStr) {

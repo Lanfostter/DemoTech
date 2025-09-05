@@ -21,6 +21,7 @@ public class UserInfoResponse extends BaseObjectDto  {
     private String email;
     private List<String> roles;
     private String token;
+    private String refreshToken;
 
     public UserInfoResponse(User user) {
         super(user);

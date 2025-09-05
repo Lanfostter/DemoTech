@@ -1,22 +1,25 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import type {MRT_ColumnDef} from "material-react-table";
 import type {User} from "../../../models/user.ts";
 import AppTable from "../../../component/AppTable.tsx";
-import {pagingUser} from "../user-service.ts";
+import {useDispatch, useSelector} from "react-redux";
+import type {RootState} from "@reduxjs/toolkit/query";
+import {fetchUsers, resetUser, setPageIndex, setPageSize} from "../../../features/userSlice.ts";
 
 export default function PageUser() {
-    const [users, setUsers] = useState<User[]>([
-        {id: 1, name: "Nguyễn Văn A", email: "a@example.com", role: "Admin"},
-        {id: 2, name: "Trần Thị B", email: "b@example.com", role: "User"},
-    ]);
+    const dispatch = useDispatch<any>();
+    const {page, pageIndex, totalElements, loading} = useSelector(
+        (state: RootState) => state.user
+    );
 
+    // load khi khởi tạo hoặc khi currentPage/pageSize thay đổi
     useEffect(() => {
-        fetchUser();
-    }, []);
-    const fetchUser = async () => {
-        const user = await pagingUser({pageIndex: 1, pageSize: 10})
-        setUsers(user.content)
-    }
+        dispatch(fetchUsers({pageIndex: page.pageIndex, pageSize: page.pageSize}));
+        return () => {
+            dispatch(resetUser()); // cleanup đúng cách
+        };
+    }, [dispatch]);
+
     const columns: MRT_ColumnDef<User>[] = [
         {accessorKey: "id", header: "ID"},
         {accessorKey: "name", header: "Họ tên"},
@@ -24,23 +27,22 @@ export default function PageUser() {
         {accessorKey: "role", header: "Role"},
     ];
 
-    const handleEdit = (row: User) => {
-        console.log("Edit:", row);
-    };
-
-    const handleDelete = (row: User) => {
-        setUsers((prev) => prev.filter((u) => u.id !== row.id));
-    };
-
     return (
         <div className="p-6">
             <h1 className="text-2xl font-semibold mb-4">Quản lý người dùng</h1>
             <AppTable<User>
-                data={users}
+                data={page.content}
                 columns={columns}
-                enableRowActions
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                totalPages={page.totalPages}
+                totalElements={page.totalElements}
+                onPageChange={(newPage) => {
+                    dispatch(setPageIndex(newPage));
+                    dispatch(fetchUsers({pageIndex: newPage, pageSize: page.pageSize}));
+                }}
+                onPageSizeChange={(newSize) => {
+                    dispatch(setPageSize(newSize));
+                    dispatch(fetchUsers({pageIndex: 1, pageSize: newSize}));
+                }}
             />
         </div>
     );

@@ -36,10 +36,9 @@ export default function LoginPage() {
                         { setSubmitting }: FormikHelpers<LoginFormValues>
                     ) => {
                         try {
-                            toast.success("Đăng nhập thành công!");
                             const data = await login(values)
-                            authLogin(data.token); // ✅ cập nhật context và localStorage
-
+                            toast.success("Đăng nhập thành công!");
+                            authLogin(data.token,data.refreshToken); // ✅ cập nhật context và localStorage
                             navigate("/dashboard");
                         } catch (err: any) {
                             toast.error("Sai tài khoản hoặc mật khẩu!");
