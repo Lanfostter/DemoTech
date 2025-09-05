@@ -1,11 +1,12 @@
-import type { RouteObject } from "react-router-dom";
-import ListUser from "./List/ListUser.tsx"; // import trực tiếp
+import type {RouteObject} from "react-router-dom";
+import {lazy} from "react"; // import trực tiếp
+const ListUser = lazy(() => import("./List/ListUser.tsx"));
 
 const userRoute: RouteObject[] = [
     {
         path: "/users",
         children: [
-            { index: true, element: <ListUser /> }, // dùng được ngay
+            {index: true, element: <ListUser/>}, // dùng được ngay
         ],
     }
 ];

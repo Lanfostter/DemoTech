@@ -8,6 +8,6 @@ import com.example.demotech.base.dto.search.UserSearch;
 import org.springframework.data.domain.Page;
 
 public interface UserService {
-    ResponseObject createUser(UserDto userDto);
+    ApiResponse<UserDto> createUser(UserDto userDto);
     ApiResponse<Page<UserInfoResponse>> paging(UserSearch search);
 }

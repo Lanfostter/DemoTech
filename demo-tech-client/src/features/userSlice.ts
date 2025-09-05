@@ -7,13 +7,13 @@ export const fetchUsers = createAsyncThunk(
     "user/fetchUsers",
     async (payload: UserSearch, thunkAPI) => {
         try {
-            const res = await pagingUser(payload);
+            const {data} = await pagingUser(payload);
             return {
-                content: res.content,
-                totalElements: res.totalElements,
-                totalPages: res.totalPages,
-                pageIndex: payload.pageIndex,
-                pageSize: payload.pageSize,
+                content: data.content,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                pageIndex: data.pageIndex,
+                pageSize: data.pageSize,
             } as Page<User>;
         } catch (error: any) {
             return thunkAPI.rejectWithValue(error.message);

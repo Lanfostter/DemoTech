@@ -1,6 +1,6 @@
 // api.ts
-import axios, { AxiosError, HttpStatusCode } from "axios";
-import { toast } from "react-toastify";
+import axios, {AxiosError, HttpStatusCode} from "axios";
+import {toast} from "react-toastify";
 import {refreshToken} from "../pages/User/user-service.ts";
 
 const api = axios.create({
@@ -37,14 +37,19 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-    (response) => response.data.data,
+    (response) => {
+        if (response.data.status !== HttpStatusCode.Ok && response.data.status !== HttpStatusCode.NoContent) {
+            toast.warning(response.data.message)
+        }
+        return response.data
+    },
     async (error: AxiosError<any>) => {
         const originalRequest: any = error.config;
 
         if (error.response?.status === HttpStatusCode.Forbidden && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
+                    failedQueue.push({resolve, reject});
                 })
                     .then((token) => {
                         originalRequest.headers.Authorization = `Bearer ${token}`;

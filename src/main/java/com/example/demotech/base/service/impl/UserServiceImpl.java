@@ -1,7 +1,8 @@
 package com.example.demotech.base.service.impl;
 
+import com.example.demotech.base.mapper.UserMapper;
+import com.example.demotech.base.domain.User;
 import com.example.demotech.base.dto.ApiResponse;
-import com.example.demotech.base.dto.ResponseObject;
 import com.example.demotech.base.dto.UserDto;
 import com.example.demotech.base.dto.UserInfoResponse;
 import com.example.demotech.base.dto.search.UserSearch;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -29,8 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseObject createUser(UserDto userDto) {
-        return null;
+    public ApiResponse<UserDto> createUser(UserDto userDto) {
+        if (userDto != null) {
+            User user = UserMapper.toUser(userDto);
+            repo.save(user);
+            return ApiResponse.success("Save successfully", UserMapper.toUserDto(user));
+        }
+        return ApiResponse.custom("Payload empty", null, HttpStatus.BAD_REQUEST);
     }
 
     @Override
