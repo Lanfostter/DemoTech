@@ -52,11 +52,11 @@ public class AuthServiceImpl implements AuthService {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtAccessToken)
-                    .body(ApiResponse.success("Login successful", userInfo));
+                    .body(ApiResponse.success("Đăng nhập thành công", userInfo));
 
         } catch (Exception e) {
-            return ResponseEntity.ok().body(
-                    ApiResponse.custom("Invalid username or password", null, HttpStatus.FORBIDDEN)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    ApiResponse.custom("Tài khoản hoặc mật khẩu không hợp lệ", null, HttpStatus.FORBIDDEN)
             );
         }
     }

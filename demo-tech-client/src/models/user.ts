@@ -4,6 +4,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    username: string;
     role: string;
 }
 export interface UserSearch extends Search {
@@ -17,8 +18,26 @@ export interface LoginPayload {
     password: string;
 }
 
-export interface LoginResponse {
+export interface UserInfoResponse {
     token: string;
+    refreshToken: string;
     userId: string;
     // các field khác nếu có
 }
+
+export interface CreateUserPayload {
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+    role: string;
+}
+
+export interface UpdateUserPayload {
+    id: number;
+    name: string;
+    email: string;
+    username?: string;
+    role: string;
+}
+

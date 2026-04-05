@@ -39,14 +39,15 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => {
         if (response.data.status !== HttpStatusCode.Ok && response.data.status !== HttpStatusCode.NoContent) {
-            toast.warning(response.data.message)
+            toast.warning(response.data.message);
+            return Promise.reject(new Error(response.data.message));
         }
         return response.data
     },
     async (error: AxiosError<any>) => {
         const originalRequest: any = error.config;
 
-        if (error.response?.status === HttpStatusCode.Forbidden && !originalRequest._retry) {
+        if (error.response?.status === HttpStatusCode.Unauthorized && !originalRequest._retry) {
             if (isRefreshing) {
                 return new Promise((resolve, reject) => {
                     failedQueue.push({resolve, reject});
@@ -78,8 +79,7 @@ api.interceptors.response.use(
                 isRefreshing = false;
             }
         }
-
-        toast.error(error.message);
+        toast.error(error?.response?.data?.message);
         return Promise.reject(error);
     }
 );
