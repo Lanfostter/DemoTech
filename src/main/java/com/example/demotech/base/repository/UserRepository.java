@@ -16,6 +16,9 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID> {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
     @Query("SELECT new com.example.demotech.base.dto.UserInfoResponse(user) FROM User user")
     Page<UserInfoResponse> paging(UserSearch search, Pageable pageable);
 }

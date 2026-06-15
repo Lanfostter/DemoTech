@@ -62,11 +62,13 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const data = await refreshToken(localStorage.getItem('refreshToken')?.toString());
-                localStorage.setItem(import.meta.env.VITE_TOKEN_KEY, data.accessToken);
-                localStorage.setItem(import.meta.env.VITE_RF_TOKEN_KEY, data.refreshToken);
-                processQueue(null, data.accessToken);
-                originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+                const raw = await refreshToken(localStorage.getItem('refreshToken')?.toString());
+                // interceptor trả response.data (ApiResponse), nên .data là inner object
+                const tokens = ((raw as unknown as { data: { accessToken: string; refreshToken: string } }).data);
+                localStorage.setItem(import.meta.env.VITE_TOKEN_KEY, tokens.accessToken);
+                localStorage.setItem(import.meta.env.VITE_RF_TOKEN_KEY, tokens.refreshToken);
+                processQueue(null, tokens.accessToken);
+                originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`;
                 return api(originalRequest);
             } catch (err) {
                 processQueue(err, null);

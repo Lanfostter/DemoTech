@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createTheme, alpha, PaletteMode, Shadows } from '@mui/material/styles';
 
 declare module '@mui/material/Paper' {

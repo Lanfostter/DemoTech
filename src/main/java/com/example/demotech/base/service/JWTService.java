@@ -25,9 +25,14 @@ public class JWTService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Sinh Access Token
+    // Sinh Access Token — embed roles so frontend can route by role
     public String generateAccessToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails.getUsername(), jwtConfig.getAccessExpirationMs());
+        Map<String, Object> claims = new HashMap<>();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .toList();
+        claims.put("roles", roles);
+        return buildToken(claims, userDetails.getUsername(), jwtConfig.getAccessExpirationMs());
     }
 
     // Sinh Refresh Token

@@ -1,12 +1,21 @@
 import {createContext, useContext, useState, useEffect, type ReactNode} from "react";
 import {jwtDecode} from "jwt-decode";
 
+interface DecodedToken {
+    sub: string;       // username
+    name?: string;
+    roles?: string[];  // e.g. ["ADMIN"] or ["USER"]
+    exp: number;
+    iat: number;
+}
+
 interface AuthContextType {
-    user: any;
+    user: DecodedToken | null;
     token: string | null;
     login: (token: string, refreshToken: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
+    isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -18,16 +27,15 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(
         localStorage.getItem(STORAGE_KEY)
     );
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<DecodedToken | null>(null);
 
     useEffect(() => {
         if (token) {
             try {
-                const decoded: any = jwtDecode(token);
+                const decoded = jwtDecode<DecodedToken>(token);
                 setUser(decoded);
             } catch (e) {
                 console.error("Invalid token", e);
-                // ❌ không xóa token ngay, để user vẫn ở login page
                 setUser(null);
             }
         } else {
@@ -48,9 +56,11 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         setUser(null);
     };
 
+    const isAdmin = user?.roles?.includes('ADMIN') ?? false;
+
     return (
         <AuthContext.Provider
-            value={{user, token, login, logout, isAuthenticated: !!token}}
+            value={{user, token, login, logout, isAuthenticated: !!token, isAdmin}}
         >
             {children}
         </AuthContext.Provider>

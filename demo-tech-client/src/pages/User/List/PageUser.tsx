@@ -3,18 +3,18 @@ import type {MRT_ColumnDef} from "material-react-table";
 import type {User} from "../../../models/user.ts";
 import AppTable from "../../../component/AppTable.tsx";
 import {useDispatch, useSelector} from "react-redux";
-import type {RootState} from "@reduxjs/toolkit/query";
+import type {RootState} from "../../../store/store.ts";
 import {fetchUsers, resetUser, setPageIndex, setPageSize} from "../../../features/userSlice.ts";
 
 export default function PageUser() {
     const dispatch = useDispatch<any>();
-    const {page, pageIndex, totalElements, loading} = useSelector(
+    const {page} = useSelector(
         (state: RootState) => state.user
     );
 
     // load khi khởi tạo hoặc khi currentPage/pageSize thay đổi
     useEffect(() => {
-        dispatch(fetchUsers({pageIndex: page.pageIndex, pageSize: page.pageSize}));
+        dispatch(fetchUsers({pageIndex: page.pageIndex, pageSize: page.pageSize, id: 0, name: '', email: '', role: null, keyword: ''}));
         return () => {
             dispatch(resetUser()); // cleanup đúng cách
         };
@@ -37,11 +37,11 @@ export default function PageUser() {
                 totalElements={page.totalElements}
                 onPageChange={(newPage) => {
                     dispatch(setPageIndex(newPage));
-                    dispatch(fetchUsers({pageIndex: newPage, pageSize: page.pageSize}));
+                    dispatch(fetchUsers({pageIndex: newPage, pageSize: page.pageSize, id: 0, name: '', email: '', role: null, keyword: ''}));
                 }}
                 onPageSizeChange={(newSize) => {
                     dispatch(setPageSize(newSize));
-                    dispatch(fetchUsers({pageIndex: 1, pageSize: newSize}));
+                    dispatch(fetchUsers({pageIndex: 1, pageSize: newSize, id: 0, name: '', email: '', role: null, keyword: ''}));
                 }}
             />
         </div>

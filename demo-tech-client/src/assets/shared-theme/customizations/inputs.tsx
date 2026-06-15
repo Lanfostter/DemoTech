@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import { alpha } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';

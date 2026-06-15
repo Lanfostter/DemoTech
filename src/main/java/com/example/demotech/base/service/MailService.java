@@ -34,6 +34,20 @@ public class MailService {
         sendHtmlMessage(to, subject, htmlBody);
     }
 
+    public void sendPasswordResetEmail(String to, String name, String token) throws Exception {
+        String subject = "EnglishPro — Đặt lại mật khẩu";
+        String html = "<div style='font-family:Arial,sans-serif;max-width:480px;margin:auto'>"
+                + "<h2 style='color:#4361EE'>EnglishPro</h2>"
+                + "<p>Xin chào <strong>" + name + "</strong>,</p>"
+                + "<p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu của bạn.</p>"
+                + "<p>Sử dụng mã token bên dưới để đặt lại (hết hạn sau 15 phút):</p>"
+                + "<div style='background:#f0f4ff;padding:16px;border-radius:8px;font-size:20px;font-weight:bold;letter-spacing:2px;color:#4361EE;text-align:center'>"
+                + token + "</div>"
+                + "<p style='color:#888;font-size:12px;margin-top:24px'>Nếu bạn không yêu cầu điều này, hãy bỏ qua email này.</p>"
+                + "</div>";
+        sendHtmlMessage(to, subject, html);
+    }
+
     private void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {login} from "../user-service.ts";
 import {useAuth} from "../../../context/AuthContext.tsx";
+import { Link } from 'react-router-dom';
 
 interface LoginFormValues {
     username: string;
@@ -36,10 +37,12 @@ export default function LoginPage() {
                         { setSubmitting }: FormikHelpers<LoginFormValues>
                     ) => {
                         try {
-                            const data = await login(values)
+                            const res = await login(values)
                             toast.success("Đăng nhập thành công!");
-                            authLogin(data.token,data.refreshToken); // ✅ cập nhật context và localStorage
-                            navigate("/dashboard");
+                            authLogin(res.data.token, res.data.refreshToken);
+                            // Redirect theo role
+                            const roles: string[] = res.data.roles ?? [];
+                            navigate(roles.includes('ADMIN') ? '/users' : '/dashboard');
                         } catch (err: any) {
                             toast.error("Sai tài khoản hoặc mật khẩu!");
                         } finally {
@@ -90,6 +93,10 @@ export default function LoginPage() {
                                 >
                                     {formik.isSubmitting ? <CircularProgress size={24} color="inherit" /> : "Đăng nhập"}
                                 </Button>
+                                <div className="flex justify-between text-sm text-gray-500 mt-1">
+                                  <Link to="/forgot-password" className="text-indigo-500 hover:underline">Quên mật khẩu?</Link>
+                                  <Link to="/register" className="text-indigo-600 font-semibold hover:underline">Tạo tài khoản mới</Link>
+                                </div>
                             </Form>
                         );
                     }}

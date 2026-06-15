@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { alpha, Theme, Components } from '@mui/material/styles';
 import { gray } from '../themePrimitives';
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 
@@ -16,6 +17,11 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void setValue(String key, String value) {
         redisTemplate.opsForValue().set(key, value);
+    }
+
+    @Override
+    public void setValueWithExpiry(String key, String value, long seconds) {
+        redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
     }
 
     @Override

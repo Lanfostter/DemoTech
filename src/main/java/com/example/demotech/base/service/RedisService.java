@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 public interface RedisService {
     void setValue(String key, String value);
+    void setValueWithExpiry(String key, String value, long seconds);
     String getValue(String key);
     void deleteKey(String key);
     void deleteByPrefix(String prefix);

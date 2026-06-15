@@ -18,7 +18,9 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
+    username: string;
+    email: string | null;
+    roles: string[];
     token: string;
-    userId: string;
-    // các field khác nếu có
+    refreshToken: string;
 }

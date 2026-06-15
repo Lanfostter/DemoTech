@@ -1,17 +1,50 @@
-import {useState} from "react";
-import {clearAllCache} from "./cache-service.ts";
-import {toast} from "react-toastify";
+import { useState } from "react";
+import { clearAllCache, clearCacheByKey, clearCacheByPrefix } from "./cache-service.ts";
+import { toast } from "react-toastify";
 
 export default function CacheManager() {
     const [key, setKey] = useState("");
     const [prefix, setPrefix] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const clearCache = async () => {
-        const response = await clearAllCache()
-        toast.success(response.message)
-        setMessage(response.message)
-    }
+
+    const handleClearAll = async () => {
+        setLoading(true);
+        try {
+            const response = await clearAllCache();
+            const msg = (response as any)?.message ?? "Đã xóa toàn bộ cache";
+            toast.success(msg);
+            setMessage(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClearByKey = async () => {
+        if (!key) return;
+        setLoading(true);
+        try {
+            const response = await clearCacheByKey(key);
+            const msg = (response as any)?.message ?? "Đã xóa cache theo key";
+            toast.success(msg);
+            setMessage(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClearByPrefix = async () => {
+        if (!prefix) return;
+        setLoading(true);
+        try {
+            const response = await clearCacheByPrefix(prefix);
+            const msg = (response as any)?.message ?? "Đã xóa cache theo prefix";
+            toast.success(msg);
+            setMessage(msg);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="max-w-xl mx-auto p-6 space-y-6 bg-gray-50 shadow rounded-lg">
@@ -19,10 +52,9 @@ export default function CacheManager() {
                 🗑️ Cache Manager
             </h1>
 
-            {/* Xóa toàn bộ */}
             <div className="flex justify-center">
                 <button
-                    onClick={() => clearCache()}
+                    onClick={handleClearAll}
                     disabled={loading}
                     className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 disabled:opacity-50"
                 >
@@ -30,7 +62,6 @@ export default function CacheManager() {
                 </button>
             </div>
 
-            {/* Xóa theo key */}
             <div className="space-y-2">
                 <input
                     type="text"
@@ -40,9 +71,7 @@ export default function CacheManager() {
                     className="w-full px-3 py-2 border rounded"
                 />
                 <button
-                    onClick={() =>
-                        callApi(`http://localhost:8080/api/cache/key/${key}`, "DELETE")
-                    }
+                    onClick={handleClearByKey}
                     disabled={loading || !key}
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 disabled:opacity-50"
                 >
@@ -50,7 +79,6 @@ export default function CacheManager() {
                 </button>
             </div>
 
-            {/* Xóa theo prefix */}
             <div className="space-y-2">
                 <input
                     type="text"
@@ -60,9 +88,7 @@ export default function CacheManager() {
                     className="w-full px-3 py-2 border rounded"
                 />
                 <button
-                    onClick={() =>
-                        callApi(`http://localhost:8080/api/cache/prefix/${prefix}`, "DELETE")
-                    }
+                    onClick={handleClearByPrefix}
                     disabled={loading || !prefix}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 disabled:opacity-50"
                 >

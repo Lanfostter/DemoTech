@@ -3,8 +3,10 @@ import userSlice from "../features/userSlice.ts";
 
 const store = configureStore({
     reducer: {
-        user: userSlice, // thêm slice reducer vào
+        user: userSlice,
     },
 });
 
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export default store;
